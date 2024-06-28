@@ -9,23 +9,20 @@
 // declaration des macros
 
 #define etatInitial 0
-#define etatNombre 1
-#define etatOperateur 2
+#define estUnNombre 1
+#define Operateur 2
 #define etatFinal 3
-
-// Définit un nouveau type Etat comme alias pour int
-typedef int Etat;
 
 //  Fonction pour afficher les lexemes reconus
 
-void afficher(int valeur, Etat etatCourant)
+void afficher(int valeur, int etatCourant)
 {
     // Vérifie si l'état courant est un nombre
-    if (etatCourant == etatNombre)
+    if (etatCourant == estUnNombre)
         printf("<int:%d>", valeur); // Affiche les nombres au format <int:valeur>
 
     // Vérifie si l'état courant est un opérateur
-    if (etatCourant == etatOperateur)
+    if (etatCourant == Operateur)
         printf("<oper:%c>", valeur); // Affiche les opérateurs au format <oper:caractereactère>
 }
 
@@ -36,11 +33,10 @@ void afficher(int valeur, Etat etatCourant)
  */
 int analyseLexical(FILE *file)
 {
-    int  nbr = 0;
-    int init = 0;                                          
-    Etat q = etatInitial, q_precedent = etatInitial;       // Déclare et initialise les états
-    char caractere;                                         // Déclare les variables pour lire les caractereactères
-
+    int nbr = 0;
+    int init = 0;
+    int q = etatInitial, q_precedent = etatInitial; // Déclare et initialise les états
+    char caractere;                                 // Déclare les variables pour lire les caractereactères
 
     printf("\n"); // Aller a la ligne
 
@@ -60,7 +56,7 @@ int analyseLexical(FILE *file)
         case '7':
         case '8':
         case '9':
-            q = etatNombre;
+            q = estUnNombre;
             nbr = nbr * 10 + (caractere - '0');
             break;
 
@@ -68,13 +64,13 @@ int analyseLexical(FILE *file)
 
         case '*':
 
-            if (q == etatNombre)
+            if (q == estUnNombre)
             {
                 afficher(nbr, q);
                 nbr = 0;
             }
 
-            q = etatOperateur;
+            q = Operateur;
             afficher(caractere, q);
             break;
         case '\n':
@@ -86,7 +82,7 @@ int analyseLexical(FILE *file)
         }
     }
     fclose(file);
-    if (q == etatNombre)
+    if (q == estUnNombre)
         afficher(nbr, q); // Affiche le dernier nombre si nécessaire
     printf("\n\n");
     return 0; // Termine la fonction sans erreur
