@@ -6,13 +6,14 @@ typedef enum {
     q_0,
     q_1,
     q_2,
-    q_final
+    q_final,
+    q_reject
 } State;
 
 State nextState(State current, char c) {
     switch(current) {
         case q_0:
-            return (c == 'i') ? q_1 : q_0;
+            return (c == 'i') ? q_1 : q_reject;
         case q_1:
             return (c == 'f') ? q_2 : q_0;
         case q_2:
@@ -30,7 +31,7 @@ int matchIfStarN(const char *line) {
     for(int i = 0; line[i] != '\0'; i++) {
         state = nextState(state, line[i]);
     }
-    return (state == q_final);
+    return (state == q_final ? 1 : 0);
 }
 
 int main(int argc, char *argv[])
@@ -60,7 +61,12 @@ int main(int argc, char *argv[])
 
     fclose(file);
 
-    printf("The regex \"^if.*n$\" matches %d lines in the file.\n", count);
+
+    if(count > 0) {
+        printf("The automate reconaized the regex \"^if.*n$\" in the file.\n");
+    } else {
+         printf("The automate not reconaized the regex \"^if.*n$\" in the file.\n");
+    }
 
     return 0;
 }

@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
     if(count == file_size) {
         printf("This file reconized regex \"[abc]*\"");
     } else {
-        printf("This file not reconized regex \"[abc]*\" %d %d", count, file_size);
+        printf("This file not reconized regex \"[abc]*\"");
     }
 //     printf("The regex \"[abc]*\" matches %d lines in the file.\n", count);
 
