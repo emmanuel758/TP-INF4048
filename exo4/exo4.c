@@ -1,20 +1,19 @@
-/* Enonce
- * Écrire un analyseur qui permet de renvoyer les lexèmes d’une chaine arithmétique
- * permettant de faire les additions et les multiplications.Exemple : L’analyse 21 + 12 * 45 devra renvoyer:
- */
 
-// importation des bibliotheques
+
+// /* Enonce
+//  * Écrire un analyseur qui permet de renvoyer les lexèmes d’une chaine arithmétique
+//  * permettant de faire les additions et les multiplications.Exemple : L’analyse 21 + 12 * 45 devra renvoyer:
+//  */
+
+// Importation des bibliothèques
 #include <stdio.h>
 
-// declaration des macros
-
+// Déclaration des macros
 #define etatInitial 0
 #define estUnNombre 1
 #define Operateur 2
-#define etatFinal 3
 
-//  Fonction pour afficher les lexemes reconus
-
+// Fonction pour afficher les lexèmes reconnus
 void afficher(int valeur, int etatCourant)
 {
     // Vérifie si l'état courant est un nombre
@@ -23,7 +22,7 @@ void afficher(int valeur, int etatCourant)
 
     // Vérifie si l'état courant est un opérateur
     if (etatCourant == Operateur)
-        printf("<oper:%c>", valeur); // Affiche les opérateurs au format <oper:caractereactère>
+        printf("<oper:%c>", valeur); // Affiche les opérateurs au format <oper:caractère>
 }
 
 // Fonction principale d'analyse lexicale
@@ -34,16 +33,13 @@ void afficher(int valeur, int etatCourant)
 int analyseLexical(FILE *file)
 {
     int nbr = 0;
-    int init = 0;
-    int q = etatInitial, q_precedent = etatInitial; // Déclare et initialise les états
-    char caractere;                                 // Déclare les variables pour lire les caractereactères
+    int q = etatInitial; // Déclare et initialise les états
+    char caractere;      // Déclare les variables pour lire les caractères
 
-    printf("\n"); // Aller a la ligne
+    printf("\n"); // Aller à la ligne
 
-    while (!feof(file)) // La boucle continue tant que la fin du fichier (feof(file)) n'est pas atteinte
+    while (fread(&caractere, 1, 1, file) == 1) // Lire un caractère à la fois du fichier pour ne pas lire deux foisi
     {
-        fread(&caractere, 1, 1, file); // fread(&caractere, 1, 1, file) lit un caractereactère du fichier et le stocke dans caractere.
-
         switch (caractere)
         {
         case '0':
@@ -57,33 +53,34 @@ int analyseLexical(FILE *file)
         case '8':
         case '9':
             q = estUnNombre;
-            nbr = nbr * 10 + (caractere - '0');
+            nbr = nbr * 10 + (caractere - '0'); // convertier un int
             break;
 
         case '+':
-
         case '*':
-
             if (q == estUnNombre)
             {
                 afficher(nbr, q);
                 nbr = 0;
             }
-
             q = Operateur;
             afficher(caractere, q);
             break;
+
         case '\n':
             break;
 
         default:
-            printf("\n%c : Parse Error, unkown char\n", caractere);
+            printf("\n%c : Parse Error, unknown char\n", caractere);
             return 1;
         }
     }
+
     fclose(file);
+
     if (q == estUnNombre)
         afficher(nbr, q); // Affiche le dernier nombre si nécessaire
+
     printf("\n\n");
     return 0; // Termine la fonction sans erreur
 }
@@ -91,8 +88,20 @@ int analyseLexical(FILE *file)
 // Fonction principale du programme
 int main(int argc, char **argv)
 {
-    FILE *file = fopen(argv[1], "r");   // Ouvre le fichier passé en argument
-    int valAnal = analyseLexical(file); // Appelle la fonction d'analyse lexicale
+    if (argc < 2)
+    {
+        printf("Usage: %s <filename>\n", argv[0]);
+        return 1;
+    }
 
-    return 0; // Termine le programme
+    FILE *file = fopen(argv[1], "r"); 
+    if (file == NULL)
+    {
+        printf("Erreur : impossible d'ouvrir le fichier %s\n", argv[1]);
+        return 1;
+    }
+
+    int valAnal = analyseLexical(file); // Appelle la fonction d'analyse lexicale pour fair e l'anal
+
+    return valAnal; // 
 }
