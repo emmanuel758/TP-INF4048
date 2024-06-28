@@ -16,9 +16,10 @@ State nextState(State current, char c) {
         case q_1:
             return (c == 'f') ? q_2 : q_0;
         case q_2:
-            return q_final;
-        case q_final:
             return (c == 'n') ? q_final : q_2;
+        case q_final:
+            return q_final;
+
     }
 
     return q_0;
