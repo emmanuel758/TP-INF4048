@@ -1,207 +1,154 @@
+#include <stdlib.h>
 #include "utilitaire.h"
 #include <stdio.h>
-#include <stdlib.h>
 
+// Fonction sur les listes chainnees
 
-/* 1) Fonction sur les listes*/
+Element* nouveauElement(int val) {
+    Element* elem = (Element*)malloc(sizeof(Element));
+    elem->valeur = val;
+    elem->suivant = NULL;
+    return elem;
+}
 
+void ajouterDebut(Element** liste, int val) {
+    Element* elem = nouveauElement(val);
+    elem->suivant = *liste;
+    *liste = elem;
+}
 
-// Fonctions pour les Noeuds
-
-Noeud* creerNoeud(int valeur) {
-    Noeud* nouveauNoeud = (Noeud*)malloc(sizeof(Noeud));
-    if (nouveauNoeud == NULL) {
-        perror("Erreur de création du noeud");
-        exit(EXIT_FAILURE);
+void inverserListe(Element** liste) {
+    Element* l = NULL;
+    Element* q = *liste;
+    Element* p;
+    while (q != NULL) {
+        ajouterDebut(&l, q->valeur);
+        p = q;
+        q = q->suivant;
+        free(p);
     }
-    nouveauNoeud->val = valeur;
-    nouveauNoeud->suivant = 0;
-    return nouveauNoeud;
+    *liste = l;
 }
 
-void insererFin(Noeud** listeChaine, int valeur) {
-    Noeud* nouveauNoeud = creerNoeud(valeur);
-    if (*listeChaine == NULL) {
-        *listeChaine = nouveauNoeud;
-    } else {
-        Noeud* temp = *listeChaine;
-        while (temp->suivant != NULL) {
-            temp = temp->suivant;
-        }
-        temp->suivant = nouveauNoeud;
-    }
+void ajouterFin(Element** liste, int val) {
+    inverserListe(liste);
+    ajouterDebut(liste, val);
+    inverserListe(liste);
 }
 
-void supprimerNoeud(Noeud** listeChaine, int val) {
-    Noeud* temp = *listeChaine;
-    Noeud* prev = NULL;
-    while (temp != NULL && temp->val != val) {
-        prev = temp;
-        temp = temp->suivant;
-    }
-    if (temp == NULL) return; // Noeud non trouvé
-    if (prev == NULL) {
-        *listeChaine = temp->suivant;
-    } else {
-        prev->suivant = temp->suivant;
-    }
-    free(temp);
+void enleverDebut(Element** liste) {
+    Element* elem = *liste;
+    *liste = (*liste)->suivant;
+    free(elem);
 }
 
-void supprimerQueue(Noeud** listeChaine) {
-    if (*listeChaine == NULL) return;
-    if ((*listeChaine)->suivant == NULL) {
-        free(*listeChaine);
-        *listeChaine = NULL;
-        return;
-    }
-    Noeud* temp = *listeChaine;
-    while (temp->suivant->suivant != NULL) {
-        temp = temp->suivant;
-    }
-    free(temp->suivant);
-    temp->suivant = NULL;
+void enleverFin(Element** liste) {
+    inverserListe(liste);
+    enleverDebut(liste);
+    inverserListe(liste);
 }
 
-void supprimerTete(Noeud** listeChaine) {
-    if (*listeChaine == NULL) return;
-    Noeud* temp = *listeChaine;
-    *listeChaine = (*listeChaine)->suivant;
-    free(temp);
+int obtenirTete(Element* liste) {
+    return liste->valeur;
 }
 
-void insererDebut(Noeud** listeChaine, int val) {
-    Noeud* nouveauNoeud = creerNoeud(val);
-    nouveauNoeud->suivant = *listeChaine;
-    *listeChaine = nouveauNoeud;
-}
-
-Noeud* rechercherNoeud(Noeud* listeChaine, int val) {
-    Noeud* temp = listeChaine;
-    while (temp != NULL) {
-        if (temp->val == val) return temp;
-        temp = temp->suivant;
-    }
-    return NULL;
-}
-
-
-
-void insererFin(Noeud *listeChaine, char donnee)
-{
-}
-
-void supprimerNoeud(Noeud *listeChaine, char donnee)
-{
-}
-
-void insererDebut(Noeud *listeChaine, char donnee)
-{
-}
-
-void afficherListe(Noeud *listeChaine)
-{
-    Noeud* temp = listeChaine;
-    while (temp != NULL) {
-        printf("%d -> ", temp->val);
-        temp = temp->suivant;
-    }
-    printf("NULL\n");
-}
-
-void detruireListe(Noeud *listeChaine)
-{
-}
-
-void detruireListe(Noeud** listeChaine) {
-    Noeud* temp = *listeChaine;
-    while (temp != NULL) {
-        Noeud* suivant = temp->suivant;
-        free(temp);
-        temp = suivant;
-    }
-    *listeChaine = NULL;
-}
-
-// Fonctions pour la File
-
-File* creerFile() {
-    File* f = (File*)malloc(sizeof(File));
-    if (f == NULL) {
-        perror("Erreur de création de la file");
-        exit(EXIT_FAILURE);
-    }
-    f->liste = NULL;
-    return f;
-}
-
-void initialiserFileVide(File* f) {
-    f->liste = NULL;
-}
-
-int defiler(File* f) {
-    if (f->liste == NULL) return -1;
-    Noeud* temp = f->liste;
-    int val = temp->val;
-    f->liste = f->liste->suivant;
-    free(temp);
+int obtenirQueue(Element* liste) {
+    int val;
+    inverserListe(&liste);
+    val = liste->valeur;
+    inverserListe(&liste);
     return val;
 }
 
-void enfiler(File* f, int val) {
-    Noeud* nouveauNoeud = creerNoeud(val);
-    if (f->liste == NULL) {
-        f->liste = nouveauNoeud;
-    } else {
-        Noeud* temp = f->liste;
-        while (temp->suivant != NULL) {
-            temp = temp->suivant;
-        }
-        temp->suivant = nouveauNoeud;
+void afficherListe(Element* liste) {
+    Element* elem = liste;
+    printf("\n");
+    while (elem != NULL) {
+        printf("%d", elem->valeur);
+        elem = elem->suivant;
     }
+    printf("\n");
 }
 
-int teteFile(File* f) {
-    if (f->liste == NULL) return -1;
-    return f->liste->val;
+// Fonction sur les listes piles
+
+void initialiserPile(Pile* p) {
+    p->indexActuel = -1;
+    p->liste = NULL;
+    p->taillePile = 0;
 }
 
-// Fonctions pour la Pile
+int estPileVide(Pile p) {
+    return p.taillePile == 0;
+}
 
-Pile* creerPile() {
-    Pile* p = (Pile*)malloc(sizeof(Pile));
-    if (p == NULL) {
-        perror("Erreur de création de la pile");
-        exit(EXIT_FAILURE);
+void empilerElement(Pile* p, int val) {
+    ajouterDebut(&(p->liste), val);
+    p->indexActuel++;
+    p->taillePile++;
+}
+
+int depilerElement(Pile* p) {
+    int val = -1;
+    if (!estPileVide(*p)) {
+        val = obtenirTete(p->liste);
+        enleverDebut(&(p->liste));
+        p->indexActuel--;
+        p->taillePile--;
     }
-    p->liste = NULL;
-    return p;
-}
-
-void initialiserPileVide(Pile* p) {
-    p->liste = NULL;
-}
-
-int depiler(Pile* p) {
-    if (p->liste == NULL) return -1;
-    Noeud* temp = p->liste;
-    int val = temp->val;
-    p->liste = p->liste->suivant;
-    free(temp);
     return val;
 }
 
-void empiler(Pile* p, int val) {
-    Noeud* nouveauNoeud = creerNoeud(val);
-    nouveauNoeud->suivant = p->liste;
-    p->liste = nouveauNoeud;
+int obtenirSommet(Pile p) {
+    return estPileVide(p) ? -1 : p.liste->valeur;
 }
 
-int estPileVide(Pile* p) {
-    return p->liste == NULL;
+int obtenirTaillePile(Pile p) {
+    return p.taillePile;
 }
 
-int tetePile(Pile* p) {
-    if (p->liste == NULL) return -1;
-    return p->liste->val;
+int obtenirIndexPile(Pile p) {
+    return p.indexActuel;
 }
+
+// Fonction sur les diles
+
+void initialiserFile(File* f) {
+    f->indexActuel = -1;
+    f->liste = NULL;
+    f->tailleFile = 0;
+}
+
+int estFileVide(File f) {
+    return f.tailleFile == 0;
+}
+
+void enfilerElement(File* f, int val) {
+    ajouterFin(&(f->liste), val);
+    f->indexActuel++;
+    f->tailleFile++;
+}
+
+int defilerElement(File* f) {
+    int val = -1;
+    if (!estFileVide(*f)) {
+        val = obtenirTete(f->liste);
+        enleverDebut(&(f->liste));
+        f->indexActuel--;
+        f->tailleFile--;
+    }
+    return val;
+}
+
+int obtenirTeteFile(File f) {
+    return estFileVide(f) ? -1 : f.liste->valeur;
+}
+
+int obtenirTailleFile(File f) {
+    return f.tailleFile;
+}
+
+int obtenirIndexFile(File f) {
+    return f.indexActuel;
+}
+

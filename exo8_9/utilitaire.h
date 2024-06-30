@@ -1,46 +1,64 @@
-#ifndef UTILITAIRE_H
-#define UTILITAIRE_H
+ 
+ // utilitaire.c
+ /*By codeur16*/
 
-// Declaration des structures  de donneees: 
+ /*By Codeur16*/
 
-typedef struct Noeud{  //noeud
-    int val;
-    struct Noeud * suivant;
-} Noeud;
+#ifndef UTILITAIRE_H_
+#define UTILITAIRE_H_
 
-typedef struct File{  // File
- Noeud* liste;
-} File ;
+/*
+ * Manipulation des listes chainées
+ */
 
-typedef struct Pile{  // pile
-    Noeud* liste;
+// Definition des structures de donnees
+typedef struct Element{
+
+	struct Element * suivant;
+	int valeur;
+}Element;
+typedef struct Pile{
+	Element* liste;
+    int indexActuel;
+	int taillePile;
+
 } Pile;
+typedef struct File{
+	Element* liste;
+	int tailleFile;
+	int indexActuel;
+} File;
 
-// Operations sur les Noeuds
+// Fonction sur les listes chainnees
 
-// liste chaine
-Noeud* creerNoeud(int valeur);
-void insererFin(Noeud* listeChaine, int valeur);
-void supprimerNoeud(Noeud* listeChaine, int valeur);
-void supprimerQueue(Noeud ** listeChaine);
-void supprimerTete(Noeud ** listeChaine);
-void insererDebut(Noeud* listeChaine, int valeur);
-void afficherListe(Noeud* listeChaine);
-void detruireListe(Noeud* listeChaine);
+Element* nouveauElement(int val);
+void ajouterDebut(Element** liste, int val);
+void enleverDebut(Element ** liste);
+void inverserListe(Element**liste);
+void ajouterFin(Element** liste, int val);
+void enleverFin(Element**liste);
+int obtenirTete(Element* liste);
+int obtenirQueue(Element* liste);
+void afficherListe(Element * liste);
 
-// file
-File* creerFile();
-void initialiserFileVide(File* f);
-int defiler(File* f);
-void enfiler(File* f, int val);
-int teteFile(File* f);
+// Fonction sur les piles
 
-// pile
-Pile* creerPile();
-void initialiserPileVide(Pile* p);
-int depiler(Pile*p);
-void empiler(Pile* p, int val);
-int estPileVide(Pile* p);
-int tetePile(Pile*p);
+void initialiserPile(Pile *p);
+int obtenirTaillePile(Pile p);
+void empilerElement(Pile*p, int val);
+int depilerElement(Pile*p);
+int estPileVide(Pile p);
+int obtenirIndexPile(Pile p);
+int obtenirSommet(Pile p);
 
-#endif
+// Fonction sur les files
+
+void initialiserFile(File *f);
+int obtenirTailleFile(File f);
+void enfilerElement(File*f, int val);
+int obtenirIndexFile(File f);
+int defilerElement(File*f);
+int estFileVide(File f);
+int obtenirTeteFile(File f);
+
+#endif 
