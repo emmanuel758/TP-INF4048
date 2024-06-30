@@ -3,31 +3,26 @@
  /*By codeur16*/
 
  /*By Codeur16*/
+#ifndef UTILITAIRE_H_INCLUDED
+#define UTILITAIRE_H_INCLUDED
 
-#ifndef UTILITAIRE_H_
-#define UTILITAIRE_H_
+typedef struct Element {
+    int valeur;
+    struct Element* suivant;
+} Element;
 
-/*
- * Manipulation des listes chainées
- */
-
-// Definition des structures de donnees
-typedef struct Element{
-
-	struct Element * suivant;
-	int valeur;
-}Element;
-typedef struct Pile{
-	Element* liste;
+typedef struct Pile {
     int indexActuel;
-	int taillePile;
-
+    Element* liste;
+    int taillePile;
 } Pile;
-typedef struct File{
-	Element* liste;
-	int tailleFile;
-	int indexActuel;
+
+typedef struct File {
+    int indexActuel;
+    Element* liste;
+    int tailleFile;
 } File;
+
 
 // Fonction sur les listes chainnees
 
@@ -50,7 +45,6 @@ int depilerElement(Pile*p);
 int estPileVide(Pile p);
 int obtenirIndexPile(Pile p);
 int obtenirSommet(Pile p);
-
 // Fonction sur les files
 
 void initialiserFile(File *f);
@@ -60,5 +54,4 @@ int obtenirIndexFile(File f);
 int defilerElement(File*f);
 int estFileVide(File f);
 int obtenirTeteFile(File f);
-
 #endif 
