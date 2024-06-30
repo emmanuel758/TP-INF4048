@@ -9,7 +9,6 @@
 #define etatErreur 4
 #define etatFinal 3
 
-
 int prioriteOperateur(int operateur)
 {
     switch (operateur)
@@ -34,7 +33,7 @@ void afficher(int valeur, int etatactuel)
 int estOperateur(int caractere)
 {
     int result = 0;
-    if (caractere == '+' || caractere == '*'|| caractere == '/'|| caractere == '-'|| caractere == '%')
+    if (caractere == '+' || caractere == '*' || caractere == '/' || caractere == '-' || caractere == '%')
         result = 1;
     return result;
 }
@@ -49,11 +48,11 @@ int EffectuerCalcul(int operation, int operand1, int operand2)
     {
         return operand1 * operand2;
     }
-     else if (operation == '/')
+    else if (operation == '/')
     {
         return operand1 / operand2;
     }
-     else if (operation == '-')
+    else if (operation == '-')
     {
         return operand1 - operand2;
     }
@@ -102,7 +101,6 @@ void exp_post_fixe_avec_prio(Element *expression, File *expressionEnSortie)
         enfilerElement(expressionEnSortie, val);
     }
 }
-
 
 // void exp_post_fixe_sans_prio(Element* expression, File* expressionEnSortie) {
 //     initialiserFile(expressionEnSortie);
@@ -159,14 +157,14 @@ void exp_post_fixe_avec_prio(Element *expression, File *expressionEnSortie)
 //     }
 // }
 
-void exp_post_fixe_sans_prio( File *sortie, Element *expression)
+void exp_post_fixe_sans_prio(File *sortie, Element *expression)
 {
-  
+
     Element *liste = expression;
     initialiserFile(sortie);
-      Pile pile;
+    Pile pile;
     initialiserPile(&pile);
-  int valeur;
+    int valeur;
     while (expression != 0)
     {
         if (!estOperateur(expression->valeur))
@@ -230,7 +228,18 @@ int analyseLexical(FILE *file)
         if (car >= '0' && car <= '9')
         {
             eInit = etatDuNombre;
-            nombre = nombre * 10 + (car - '0');
+            int temp_nombre = nombre * 10 + (car - '0');
+            if (temp_nombre <= 100)
+            {
+                nombre = temp_nombre;
+            }
+            else
+            {
+                // Gérer le cas où le nombre dépasse 100
+                printf("Erreur : Nombre dépasse 100\n");
+                // Vous pouvez soit réinitialiser le nombre soit traiter l'erreur d'une autre manière
+                nombre = 0; // Par exemple, réinitialiser le nombre
+            }
         }
         else if (car == '+' || car == '*')
         {
@@ -322,7 +331,7 @@ int main(int argc, char **argv)
     initialiserFile(&expressionENsortie);
 
     // Calcul avec l'expression en postfixe sans priorité
-    exp_post_fixe_sans_prio( &expressionENsortie,expression);
+    exp_post_fixe_sans_prio(&expressionENsortie, expression);
     int resultat1 = evaluation_gauche_droite_alternative(expressionENsortie);
 
     initialiserFile(&expressionENsortie); // Réinitialisation de la file
