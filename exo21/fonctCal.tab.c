@@ -45,7 +45,6 @@
    are private implementation details.  Do not rely on them.  */
 
 /* Identify Bison output.  */
-#include "fonctCal.tab.h"
 #define YYBISON 1
 
 /* Bison version.  */
@@ -70,7 +69,7 @@
 #line 1 "fonctCal.y"
 
 #include <stdio.h>
- // Assurez-vous que c'est le bon chemin vers votre fichier lex.yy.h
+#include "fonctCal.tab.h"  // Assurez-vous que c'est le bon chemin vers votre fichier lex.yy.h
 
 #line 75 "fonctCal.tab.c"
 
